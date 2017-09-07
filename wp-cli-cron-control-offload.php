@@ -16,6 +16,6 @@ namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 
 const ACTION = 'wp_cli_cron_control_offload';
 
-require_once __DIR__ . '/includes/utils.php';
+require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/schedule.php';
 require_once __DIR__ . '/includes/run.php';
