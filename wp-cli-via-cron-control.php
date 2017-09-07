@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name:     Wp Cli Via Cron Control
- * Plugin URI:      PLUGIN SITE HERE
- * Description:     PLUGIN DESCRIPTION HERE
- * Author:          YOUR NAME HERE
- * Author URI:      YOUR SITE HERE
+ * Plugin Name:     WP-CLI Via Cron Control
+ * Plugin URI:      https://automattic.com/
+ * Description:     Schedule WP-CLI tasks to run via Cron Control
+ * Author:          Erick Hitter, Automattic
+ * Author URI:      https://vip.wordpress.com/
  * Text Domain:     wp-cli-via-cron-control
  * Domain Path:     /languages
  * Version:         0.1.0
  *
- * @package         Wp_Cli_Via_Cron_Control
+ * @package         WP_CLI_via_Cron_Control
  */

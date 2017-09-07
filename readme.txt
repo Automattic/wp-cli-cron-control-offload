@@ -1,14 +1,13 @@
-=== Wp Cli Via Cron Control ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://example.com/
-Tags: comments, spam
-Requires at least: 4.4
-Tested up to: 4.8.1
+=== WP-CLI via Cron Control ===
+Contributors: ethitter, automattic
+Tags: wp-cli, cli, cron, cron control
+Requires at least: 4.8.1
+Tested up to: 4.9
 Stable tag: 0.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Schedule WP-CLI tasks to run via Cron Control
 
 == Description ==
 
