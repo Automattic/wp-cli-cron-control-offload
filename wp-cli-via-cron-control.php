@@ -9,5 +9,12 @@
  * Domain Path:     /languages
  * Version:         0.1.0
  *
- * @package         WP_CLI_via_Cron_Control
+ * @package         WP_CLI_Cron_Control_Offload
  */
+
+namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
+
+const ACTION = 'wp_cli_cron_control_offload';
+
+require_once __DIR__ . '/includes/schedule.php';
+require_once __DIR__ . '/includes/run.php';
