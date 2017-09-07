@@ -18,11 +18,37 @@ function is_subcommand_allowed( $subcommand ) {
  * @return array
  */
 function get_subcommand_whitelist() {
-	return array();
+	// Supported built-in commands
+	$whitelist = array(
+		'cache',
+		'cap',
+		'comment',
+		'import',
+		'media',
+		'menu',
+		'network',
+		'option',
+		'plugin',
+		'post',
+		'post-type',
+		'rewrite',
+		'role',
+		'sidebar',
+		'site',
+		'super-admin',
+		'taxonomy',
+		'term',
+		'theme',
+		'transient',
+		'user',
+		'widget',
+	);
+
+	return apply_filters( 'wp_cli_cron_control_offload_subcommand_whitelist', $whitelist );
 }
 
 /**
- * Certain commands should never be supported
+ * Certain commands should never be allowed
  *
  * @return array
  */
@@ -35,6 +61,7 @@ function get_subcommand_blacklist() {
 		'db',
 		'eval',
 		'eval-file',
+		'package',
 		'scaffold',
 		'server',
 	);
