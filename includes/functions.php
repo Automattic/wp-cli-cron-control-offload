@@ -3,13 +3,13 @@
 namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 
 /**
- * Check if subcommand is allowed
+ * Check if command is allowed
  *
- * @param string $subcommand
+ * @param string $command
  * @return bool
  */
-function is_subcommand_allowed( $subcommand ) {
-	return in_array( $subcommand, get_command_whitelist(), true ) && ! in_array( $subcommand, get_command_blacklist(), true );
+function is_command_allowed( $command ) {
+	return in_array( $command, get_command_whitelist(), true ) && ! in_array( $command, get_command_blacklist(), true );
 }
 
 /**
@@ -23,6 +23,8 @@ function get_command_whitelist() {
 		'cache',
 		'cap',
 		'comment',
+		'cron-control',
+		'cron-control-fixers',
 		'media',
 		'menu',
 		'network',
@@ -80,7 +82,7 @@ function schedule_cli_command( $args ) {
 		return $event_args;
 	}
 
-	$scheduled = wp_schedule_single_event( strtotime( '+30 seconds' ), ACTION, $event_args );
+	$scheduled = wp_schedule_single_event( strtotime( '+30 seconds' ), ACTION, array( 'command' => $event_args ) );
 
 	return false !== $scheduled;
 }
@@ -88,21 +90,33 @@ function schedule_cli_command( $args ) {
 /**
  * Validate WP-CLI command to be scheduled
  *
- * @param array $args
+ * @param string $args
  * @return array|\WP_Error
  */
 function validate_args( $args ) {
-	$validated_args = array();
-
-	// TODO: validate
-	// TODO: strip leading "wp"
-	// TODO: check first positional argument against `is_command_allowed()`
-
-	$validated_args['command'] = $args;
-
-	if ( empty( $validated_args ) ) {
-		return new \WP_Error( 'Arguments could not be parsed for validation.' );
+	// Strip `wp` if included
+	if ( 0 === stripos( $args, 'wp' ) ) {
+		$args = trim( substr( $args, 2 ) );
 	}
 
-	return $validated_args;
+	// Block disallowed commands
+	$command = explode( ' ', $args );
+	$command = array_shift( $command );
+	if ( ! is_command_allowed( $command ) ) {
+		return new \WP_Error( "$command not allowed" );
+	}
+
+	// Don't worry about the user WP-CLI runs as
+	if ( false === stripos( $args, '--allow-root' ) ) {
+		$args .= ' --allow-root';
+	}
+
+	// TODO: validate further
+
+	// Nothing to run
+	if ( empty( $args ) ) {
+		return new \WP_Error( 'Invalid command provided' );
+	}
+
+	return $args;
 }
