@@ -1,13 +1,14 @@
 <?php
 
 namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
+use WP_Error;
 
 /**
  * Create cron event for a given WP-CLI command
  *
  * @param string $command
  * @param int $timestamp Optional.
- * @return bool|\WP_Error
+ * @return int|WP_Error
  */
 function schedule_cli_command( $command, $timestamp = null ) {
 	$command = validate_command( $command );
@@ -20,18 +21,26 @@ function schedule_cli_command( $command, $timestamp = null ) {
 		$timestamp = strtotime( '+30 seconds' );
 	}
 
+	if ( $timestamp <= time() ) {
+		return new WP_Error( 'invalid-timestamp', __( 'Timestamp is in the past.', 'wp-cli-cron-control-offload' ) );
+	}
+
 	$event_args = array( 'command' => $command, );
 
 	$scheduled = wp_schedule_single_event( $timestamp, ACTION, $event_args );
 
-	return false !== $scheduled;
+	if ( false === $scheduled ) {
+		return new WP_Error( 'not-scheduled', __( 'Command may already be scheduled, or it was blocked via the `schedule_event` filter.', 'wp-cli-cron-control-offload' ) );
+	}
+
+	return $timestamp;
 }
 
 /**
  * Validate WP-CLI command to be scheduled
  *
  * @param string $command
- * @return array|\WP_Error
+ * @return array|WP_Error
  */
 function validate_command( $command ) {
 	$command = trim( $command );
@@ -45,7 +54,7 @@ function validate_command( $command ) {
 	$first_command = explode( ' ', $command );
 	$first_command = array_shift( $first_command );
 	if ( ! is_command_allowed( $first_command ) ) {
-		return new \WP_Error( sprintf( __( '%1$s: `%2$s` not allowed', 'wp-cli-cron-control-offload' ), MESSAGE_PREFIX, $first_command ) );
+		return new WP_Error( 'blocked-command', sprintf( __( '`%1$s` not allowed', 'wp-cli-cron-control-offload' ), $first_command ) );
 	}
 
 	// Don't worry about the user WP-CLI runs as
@@ -57,7 +66,7 @@ function validate_command( $command ) {
 
 	// Nothing to run
 	if ( empty( $command ) ) {
-		return new \WP_Error( 'Invalid command provided' );
+		return new WP_Error( 'invalid-command', 'Invalid command provided' );
 	}
 
 	return $command;
@@ -118,6 +127,7 @@ function get_command_whitelist() {
 function get_command_blacklist() {
 	// TODO: constant!
 	return array(
+		CLI_NAMESPACE, // Don't support scheduling loops
 		'cli',
 		'config',
 		'core',
