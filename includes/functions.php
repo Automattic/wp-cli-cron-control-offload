@@ -67,6 +67,8 @@ function validate_command( $command ) {
 		$command .= ' --allow-root';
 	}
 
+	// TODO: validate further // @codingStandardsIgnoreLine
+
 	// Nothing to run.
 	if ( empty( $command ) ) {
 		return new WP_Error( 'invalid-command', 'Invalid command provided' );
