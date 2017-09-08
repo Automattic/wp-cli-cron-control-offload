@@ -5,16 +5,22 @@ namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 /**
  * Create cron event for a given WP-CLI command
  *
- * return bool|\WP_Error
+ * @param string $args
+ * @param int $timestamp Optional.
+ * @return bool|\WP_Error
  */
-function schedule_cli_command( $args ) {
+function schedule_cli_command( $args, $timestamp = null ) {
 	$event_args = validate_args( $args );
 
 	if ( is_wp_error( $event_args ) ) {
 		return $event_args;
 	}
 
-	$scheduled = wp_schedule_single_event( strtotime( '+30 seconds' ), ACTION, array( 'command' => $event_args ) );
+	if ( ! is_int( $timestamp ) ) {
+		$timestamp = strtotime( '+30 seconds' );
+	}
+
+	$scheduled = wp_schedule_single_event( $timestamp, ACTION, array( 'command' => $event_args ) );
 
 	return false !== $scheduled;
 }
