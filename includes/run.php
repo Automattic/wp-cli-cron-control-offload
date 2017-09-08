@@ -32,6 +32,7 @@ function run_event( $command ) {
 
 	// Command failed
 	if ( ! is_object( $output ) || is_wp_error( $output ) ) {
+		// TODO: message consistency, revisit using ACTION as the "key", seems wrong
 		trigger_error( 'WP-CLI command failed. (' . var_export( $command, true ) . ')', E_USER_WARNING );
 		trigger_error( var_export( $output, true ), E_USER_WARNING );
 		return;

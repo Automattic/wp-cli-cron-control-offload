@@ -18,6 +18,7 @@ function is_command_allowed( $command ) {
  * @return array
  */
 function get_command_whitelist() {
+	// TODO: constant!
 	// Supported built-in commands
 	$whitelist = array(
 		'cache',
@@ -54,6 +55,7 @@ function get_command_whitelist() {
  * @return array
  */
 function get_command_blacklist() {
+	// TODO: constant!
 	return array(
 		'cli',
 		'config',
