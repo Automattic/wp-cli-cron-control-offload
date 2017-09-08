@@ -23,8 +23,8 @@ class CLI extends WP_CLI_Command {
 	 *
 	 * @subcommand create
 	 * @synopsis --command=<command> [--timestamp=<timestamp>]
-	 * @param array $args
-	 * @param array $assoc_args
+	 * @param array    $args Array of positional arguments
+	 * @param array    $assoc_args Array of flags
 	 */
 	public function create( $args, $assoc_args ) {
 		$command = WP_CLI\Utils\get_flag_value( $assoc_args, 'command', '' );
