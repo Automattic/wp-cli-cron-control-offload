@@ -1,4 +1,9 @@
 <?php
+/**
+ * Common plugin functions
+ *
+ * @package WP_CLI_Cron_Control_Offload
+ */
 
 namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 use WP_Error;
@@ -6,8 +11,8 @@ use WP_Error;
 /**
  * Create cron event for a given WP-CLI command
  *
- * @param string $command
- * @param int $timestamp Optional.
+ * @param string $command WP-CLI command to schedule.
+ * @param int    $timestamp Optional. Unix timestamp to schedule command to run at.
  * @return int|WP_Error
  */
 function schedule_cli_command( $command, $timestamp = null ) {
@@ -25,7 +30,7 @@ function schedule_cli_command( $command, $timestamp = null ) {
 		return new WP_Error( 'invalid-timestamp', __( 'Timestamp is in the past.', 'wp-cli-cron-control-offload' ) );
 	}
 
-	$event_args = array( 'command' => $command, );
+	$event_args = array( 'command' => $command );
 
 	$scheduled = wp_schedule_single_event( $timestamp, ACTION, $event_args );
 
@@ -39,32 +44,30 @@ function schedule_cli_command( $command, $timestamp = null ) {
 /**
  * Validate WP-CLI command to be scheduled
  *
- * @param string $command
+ * @param string $command WP-CLI command to validate.
  * @return array|WP_Error
  */
 function validate_command( $command ) {
 	$command = trim( $command );
 
-	// Strip `wp` if included
+	// Strip `wp` if included.
 	if ( 0 === stripos( $command, 'wp' ) ) {
 		$command = trim( substr( $command, 2 ) );
 	}
 
-	// Block disallowed commands
+	// Block disallowed commands.
 	$first_command = explode( ' ', $command );
 	$first_command = array_shift( $first_command );
 	if ( ! is_command_allowed( $first_command ) ) {
 		return new WP_Error( 'blocked-command', sprintf( __( '`%1$s` not allowed', 'wp-cli-cron-control-offload' ), $first_command ) );
 	}
 
-	// Don't worry about the user WP-CLI runs as
+	// Don't worry about the user WP-CLI runs as.
 	if ( false === stripos( $command, '--allow-root' ) ) {
 		$command .= ' --allow-root';
 	}
 
-	// TODO: validate further
-
-	// Nothing to run
+	// Nothing to run.
 	if ( empty( $command ) ) {
 		return new WP_Error( 'invalid-command', 'Invalid command provided' );
 	}
@@ -75,7 +78,7 @@ function validate_command( $command ) {
 /**
  * Check if command is allowed
  *
- * @param string $command
+ * @param string $command Top-level WP-CLI command to check against blacklist and whitelist.
  * @return bool
  */
 function is_command_allowed( $command ) {
@@ -89,7 +92,7 @@ function is_command_allowed( $command ) {
  */
 function get_command_whitelist() {
 	// TODO: constant!
-	// Supported built-in commands
+	// Supported built-in commands.
 	$whitelist = array(
 		'cache',
 		'cap',
@@ -127,7 +130,7 @@ function get_command_whitelist() {
 function get_command_blacklist() {
 	// TODO: constant!
 	return array(
-		CLI_NAMESPACE, // Don't support scheduling loops
+		CLI_NAMESPACE, // Don't support scheduling loops.
 		'cli',
 		'config',
 		'core',
