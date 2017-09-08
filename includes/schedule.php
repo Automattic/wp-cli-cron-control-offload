@@ -38,7 +38,7 @@ class CLI extends WP_CLI_Command {
 			WP_CLI::error( $scheduled->get_error_message() );
 		}
 
-		WP_CLI::success( __( 'Command scheduled!', 'wp-cli-cron-control-offload' ) );
+		WP_CLI::success( sprintf( __( 'Command scheduled for %1$s from now (%2$s)', 'wp-cli-cron-control-offload' ), human_time_diff( $scheduled ), date( 'Y-m-d H:i:s T', $scheduled ) ) );
 	}
 }
 
