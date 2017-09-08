@@ -60,7 +60,7 @@ function validate_args( $args ) {
  * @return bool
  */
 function is_command_allowed( $command ) {
-	return in_array( $command, get_command_whitelist(), true ) && ! in_array( $command, get_command_blacklist(), true );
+	return ! in_array( $command, get_command_blacklist(), true ) && in_array( $command, get_command_whitelist(), true );
 }
 
 /**
