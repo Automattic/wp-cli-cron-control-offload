@@ -15,7 +15,7 @@ function run_event( $command ) {
 		return;
 	}
 
-	if ( ! validate_args( $command ) ) {
+	if ( ! validate_command( $command ) ) {
 		trigger_error( sprintf( __( '%1$s: Attempted to run blocked WP-CLI command. (%2$s)', 'wp-cli-cron-control-offload' ), MESSAGE_PREFIX, var_export( $command, true ) ), E_USER_WARNING );
 		return;
 	}
