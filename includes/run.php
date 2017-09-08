@@ -23,7 +23,9 @@ function run_event( $command ) {
 	$start = microtime( true );
 
 	$output = \WP_CLI::runcommand( $command, array(
-		'return' => 'all',
+		'exit_error' => false, // Don't kill the cron process if the WP-CLI command fails, otherwise we can't capture the error
+		'launch'     => true,  // Don't reuse as we're in cron context
+		'return'     => 'all', // We want STDERR and the exit code, in addition to STDOUT
 	) );
 
 	$end = microtime( true );
