@@ -116,7 +116,7 @@ function get_command_whitelist() {
 		'widget',
 	);
 
-	return apply_filters( 'wp_cli_cron_control_offload_subcommand_whitelist', $whitelist );
+	return apply_filters( 'wp_cli_cron_control_offload_command_whitelist', $whitelist );
 }
 
 /**
