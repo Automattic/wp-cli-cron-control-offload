@@ -19,5 +19,5 @@ const CLI_NAMESPACE  = 'cli-cron-offload';
 const MESSAGE_PREFIX = 'WP-CLI via Cron';
 
 require_once __DIR__ . '/includes/functions.php';
-require_once __DIR__ . '/includes/schedule.php';
+require_once __DIR__ . '/includes/class-cli.php';
 require_once __DIR__ . '/includes/run.php';

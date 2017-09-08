@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class CLI
+ *
+ * @package WP_CLI_Cron_Control_Offload
+ */
 
 namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 
@@ -18,6 +23,8 @@ class CLI extends WP_CLI_Command {
 	 *
 	 * @subcommand create
 	 * @synopsis --command=<command> [--timestamp=<timestamp>]
+	 * @param array $args
+	 * @param array $assoc_args
 	 */
 	public function create( $args, $assoc_args ) {
 		$command = WP_CLI\Utils\get_flag_value( $assoc_args, 'command', '' );
@@ -38,6 +45,7 @@ class CLI extends WP_CLI_Command {
 			WP_CLI::error( $scheduled->get_error_message() );
 		}
 
+		/* translators: 1: Human time difference, 2. Timestamp in UTC  */
 		WP_CLI::success( sprintf( __( 'Command scheduled for %1$s from now (%2$s)', 'wp-cli-cron-control-offload' ), human_time_diff( $scheduled ), date( 'Y-m-d H:i:s T', $scheduled ) ) );
 	}
 }
