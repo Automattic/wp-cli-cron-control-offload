@@ -20,11 +20,13 @@ function run_event( $command ) {
 		return;
 	}
 
-	// TODO: time event execution
+	$start = microtime( true );
 
 	$output = \WP_CLI::runcommand( $command, array(
 		'return' => 'all',
 	) );
+
+	$end = microtime( true );
 
 	// Command failed
 	if ( ! is_object( $output ) || is_wp_error( $output ) ) {
@@ -34,7 +36,10 @@ function run_event( $command ) {
 	}
 
 	// On success, reformat response for logging
-	$output->command = $command;
+	$output->command  = $command;
+	$output->start    = $start;
+	$output->end      = $end;
+	$output->duration = $end - $start;
 
 	$output = var_export( $output, true );
 	$output = ACTION . ":\n{$output}";
