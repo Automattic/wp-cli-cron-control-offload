@@ -1,4 +1,4 @@
-=== WP-CLI via Cron Control ===
+=== WP-CLI Cron Control Offload ===
 Contributors: ethitter, automattic
 Tags: wp-cli, cli, cron, cron control
 Requires at least: 4.8.1

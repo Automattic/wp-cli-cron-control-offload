@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Wp_Cli_Via_Cron_Control
+ * @package WP_CLI_Cron_Control_Offload
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );

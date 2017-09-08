@@ -2,7 +2,7 @@
 /**
  * Class SampleTest
  *
- * @package Wp_Cli_Via_Cron_Control
+ * @package WP_CLI_Cron_Control_Offload
  */
 
 /**
