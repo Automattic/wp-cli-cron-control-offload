@@ -16,11 +16,13 @@ namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 function run_event( $command ) {
 	if ( ! defined( 'WP_CLI' ) || ! \WP_CLI ) {
 		// TODO: reschedule at least once or twice.
+		/* translators: 1: Plugin's prefix for log messages, 2. WP-CLI command that would have run */
 		trigger_error( sprintf( __( '%1$s: Attempted to run event without WP-CLI loaded. (%2$s)', 'wp-cli-cron-control-offload' ), MESSAGE_PREFIX, var_export( $command, true ) ), E_USER_WARNING );
 		return;
 	}
 
 	if ( ! validate_command( $command ) ) {
+		/* translators: 1: Plugin's prefix for log messages, 2. WP-CLI command that would have run */
 		trigger_error( sprintf( __( '%1$s: Attempted to run blocked WP-CLI command. (%2$s)', 'wp-cli-cron-control-offload' ), MESSAGE_PREFIX, var_export( $command, true ) ), E_USER_WARNING );
 		return;
 	}
@@ -37,6 +39,7 @@ function run_event( $command ) {
 
 	// Command failed.
 	if ( ! is_object( $output ) || is_wp_error( $output ) ) {
+		/* translators: 1: Plugin's prefix for log messages, 2. Command error that caused failure */
 		trigger_error( sprintf( __( '%1$s: WP-CLI command failed. (%2$s)', 'wp-cli-cron-control-offload' ), MESSAGE_PREFIX, var_export( $command, true ) ), E_USER_WARNING );
 
 		$message = is_wp_error( $output ) ? $output->get_error_message() : var_export( $output, true );

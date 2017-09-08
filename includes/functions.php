@@ -30,7 +30,9 @@ function schedule_cli_command( $command, $timestamp = null ) {
 		return new WP_Error( 'invalid-timestamp', __( 'Timestamp is in the past.', 'wp-cli-cron-control-offload' ) );
 	}
 
-	$event_args = array( 'command' => $command );
+	$event_args = array(
+		'command' => $command,
+	);
 
 	$scheduled = wp_schedule_single_event( $timestamp, ACTION, $event_args );
 
@@ -59,6 +61,7 @@ function validate_command( $command ) {
 	$first_command = explode( ' ', $command );
 	$first_command = array_shift( $first_command );
 	if ( ! is_command_allowed( $first_command ) ) {
+		/* translators: 1: Disallowed command */
 		return new WP_Error( 'blocked-command', sprintf( __( '`%1$s` not allowed', 'wp-cli-cron-control-offload' ), $first_command ) );
 	}
 
