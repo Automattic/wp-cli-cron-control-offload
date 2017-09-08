@@ -30,10 +30,12 @@ function schedule_cli_command( $command, $timestamp = null ) {
 /**
  * Validate WP-CLI command to be scheduled
  *
- * @param string $args
+ * @param string $command
  * @return array|\WP_Error
  */
 function validate_command( $command ) {
+	$command = trim( $command );
+
 	// Strip `wp` if included
 	if ( 0 === stripos( $command, 'wp' ) ) {
 		$command = trim( substr( $command, 2 ) );
@@ -48,7 +50,7 @@ function validate_command( $command ) {
 
 	// Don't worry about the user WP-CLI runs as
 	if ( false === stripos( $command, '--allow-root' ) ) {
-		$args .= ' --allow-root';
+		$command .= ' --allow-root';
 	}
 
 	// TODO: validate further
