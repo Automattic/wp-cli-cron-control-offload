@@ -15,9 +15,9 @@ cache:
 matrix:
   include:
     # PHPUnit
-    - php: nightly
+    - php: 7.2
       env: WP_VERSION=latest
-    - php: nightly
+    - php: 7.2
       env: WP_VERSION=trunk
     - php: 7.1
       env: WP_VERSION=latest
