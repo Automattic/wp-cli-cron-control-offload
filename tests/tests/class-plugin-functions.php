@@ -64,16 +64,30 @@ class Plugin_Functions extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test event scheduling
+	 * Test scheduling several of the same allowed event
 	 */
-	function test_event_scheduling() {
+	function test_allowed_event_scheduling() {
 		// Should succeed, returning a timestamp.
-		$this->assertTrue( is_int( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp cli info' ) ) );
+		$this->assertTrue( is_int( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp post list' ) ) );
 
 		// Should be blocked as a duplicate, thanks to Core's 10-minute lookahead.
-		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp cli info' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp post list' ) ) );
 
 		// Should also fail as normalization makes it a duplicate.
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'post list' ) ) );
+	}
+
+	/**
+	 * Test scheduling several of the same blocked event
+	 */
+	function test_blocked_event_scheduling() {
+		// Should fail, is a blocked event.
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp cli info' ) ) );
+
+		// Should fail as a blocked event, would otherwise fail as a duplicate.
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp cli info' ) ) );
+
+		// Should also fail as a blocked event, though normalization would also block it as a duplicate.
 		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'cli info' ) ) );
 	}
 }
