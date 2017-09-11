@@ -25,7 +25,39 @@ Provides a WP-CLI command to schedule these events. A UI is under consideration.
 
 = Does this support custom WP-CLI commands? =
 
-Yes, after whitelisting them using the `wp_cli_cron_control_offload_command_whitelist` filter.
+Yes. By default, no restrictions are placed on what commands are supported, as those restrictions depend on the environment where this plugin is used. That said, see the following sections regarding support for whitelists and blacklists.
+
+= Can I dynamically block commands? =
+
+Yes, using the `wp_cli_cron_control_offload_is_command_allowed` filter. Note that the blacklist described below takes precedence over this filter (the filter is ignored). Additionally, if a whitelist is provided, the filter uses it as the default.
+
+= Can commands be blocked or blacklisted? =
+
+Yes, using either the `WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST` constant or the `wp_cli_cron_control_offload_command_blacklist` filter. If defined, the constant takes precedence and the filter is ignored.
+
+Regardless of whether the constant or filter is used, either should provide an array of top-level commands to permit:
+
+```
+array(
+	'post',
+	'site',
+)
+```
+
+= Can commands be restricted or whitelisted? =
+
+Yes, using either the `WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST` constant or the `wp_cli_cron_control_offload_command_whitelist` filter. If defined, the constant takes precedence and the filter is ignored.
+
+Regardless of whether the constant or filter is used, either should provide an array of top-level commands to block:
+
+```
+array(
+	'cli',
+	'core',
+	'eval',
+	'eval-file',
+)
+```
 
 == Changelog ==
 

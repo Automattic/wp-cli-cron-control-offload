@@ -92,66 +92,47 @@ function is_command_allowed( $command ) {
 		return false;
 	}
 
+	// If there's a whitelist, default to it.
+	if ( ! empty( get_command_whitelist() ) ) {
+		add_filter( 'wp_cli_cron_control_offload_is_command_allowed', __NAMESPACE__ . '\command_is_whitelisted', 9, 2 );
+	}
+
+	return apply_filters( 'wp_cli_cron_control_offload_is_command_allowed', true, $command );
+}
+
+/**
+ * Filter callback to check a command against a whitelist
+ *
+ * @param bool   $whitelisted Command is allowed.
+ * @param string $command Command to check.
+ * @return bool
+ */
+function command_is_whitelisted( $whitelisted, $command ) {
 	return in_array( $command, get_command_whitelist(), true );
 }
 
 /**
- * Most commands must be whitelisted
+ * Support a whitelist of commands
  *
  * @return array
  */
 function get_command_whitelist() {
-	// TODO: constant!
-	// Supported built-in commands.
-	$whitelist = array(
-		'cache',
-		'cap',
-		'comment',
-		'media',
-		'menu',
-		'network',
-		'option',
-		'plugin',
-		'post',
-		'post-type',
-		'rewrite',
-		'role',
-		'sidebar',
-		'site',
-		'super-admin',
-		'taxonomy',
-		'term',
-		'theme',
-		'transient',
-		'user',
-		'widget',
-	);
+	if ( defined( 'WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST' ) && is_array( \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST ) ) {
+		return \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST;
+	}
 
-	return apply_filters( 'wp_cli_cron_control_offload_command_whitelist', $whitelist );
+	return apply_filters( 'wp_cli_cron_control_offload_command_whitelist', array() );
 }
 
 /**
- * Certain commands should never be allowed
+ * Allow commands to be blocked
  *
  * @return array
  */
 function get_command_blacklist() {
-	// TODO: constant!
-	return array(
-		CLI_NAMESPACE, // Don't support scheduling loops.
-		'cli',
-		'config',
-		'core',
-		'cron',
-		'cron-control',
-		'cron-control-fixers',
-		'db',
-		'eval',
-		'eval-file',
-		'export',
-		'import',
-		'package',
-		'scaffold',
-		'server',
-	);
+	if ( defined( 'WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST' ) && is_array( \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST ) ) {
+		return \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST;
+	}
+
+	return apply_filters( 'wp_cli_cron_control_offload_command_blacklist', array() );
 }
