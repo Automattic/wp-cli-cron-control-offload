@@ -47,7 +47,7 @@ function schedule_cli_command( $command, $timestamp = null ) {
  * Validate WP-CLI command to be scheduled
  *
  * @param string $command WP-CLI command to validate.
- * @return array|WP_Error
+ * @return string|WP_Error
  */
 function validate_command( $command ) {
 	$command = trim( $command );
