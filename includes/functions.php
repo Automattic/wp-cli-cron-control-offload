@@ -87,7 +87,12 @@ function validate_command( $command ) {
  * @return bool
  */
 function is_command_allowed( $command ) {
-	return ! in_array( $command, get_command_blacklist(), true ) && in_array( $command, get_command_whitelist(), true );
+	// Command explicitly disallowed.
+	if ( in_array( $command, get_command_blacklist(), true ) ) {
+		return false;
+	}
+
+	return in_array( $command, get_command_whitelist(), true );
 }
 
 /**
