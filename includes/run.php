@@ -16,7 +16,6 @@ use WP_CLI;
  */
 function run_event( $command ) {
 	if ( ! defined( 'WP_CLI' ) || ! \WP_CLI ) {
-		// TODO: reschedule at least once or twice.
 		/* translators: 1: Plugin's prefix for log messages, 2. WP-CLI command that would have run */
 		trigger_error( sprintf( __( '%1$s: Attempted to run event without WP-CLI loaded. (%2$s)', 'wp-cli-cron-control-offload' ), MESSAGE_PREFIX, var_export( $command, true ) ), E_USER_WARNING );
 		return;
