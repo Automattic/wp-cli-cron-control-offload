@@ -10,9 +10,29 @@ use Automattic\WP\WP_CLI_Cron_Control_Offload;
 use WP_UnitTestCase;
 
 /**
- * Sample test case.
+ * Core function tests
  */
-class SampleTest extends WP_UnitTestCase {
+class Plugin_Functions extends WP_UnitTestCase {
+	/**
+	 * Prepare test environment
+	 */
+	function setUp() {
+		parent::setUp();
+
+		// make sure the schedule is clear.
+		_set_cron_array( array() );
+	}
+
+	/**
+	 * Clean up after our tests
+	 */
+	function tearDown() {
+		// make sure the schedule is clear.
+		_set_cron_array( array() );
+
+		parent::tearDown();
+	}
+
 	/**
 	 * Test whitelisted commands
 	 */
@@ -41,5 +61,19 @@ class SampleTest extends WP_UnitTestCase {
 	function test_blacklist_using_validate_command() {
 		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'wp cli info' ) ) );
 		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'cli info' ) ) );
+	}
+
+	/**
+	 * Test event scheduling
+	 */
+	function test_event_scheduling() {
+		// Should succeed, returning a timestamp.
+		$this->assertTrue( is_int( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp cli info' ) ) );
+
+		// Should be blocked as a duplicate, thanks to Core's 10-minute lookahead.
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'wp cli info' ) ) );
+
+		// Should also fail as normalization makes it a duplicate.
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'cli info' ) ) );
 	}
 }
