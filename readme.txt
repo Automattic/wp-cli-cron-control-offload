@@ -23,6 +23,14 @@ Provides a WP-CLI command to schedule these events. A UI is under consideration.
 
 == Frequently Asked Questions ==
 
+= Where is command output captured? =
+
+`error_log()` is used to store WP-CLI's output (`STDOUT`, `STDERR`, and the exit code), along with basic timing information and the command that was executed.
+
+= Can this be used with commands that manipulate files? =
+
+This depends on how the commands are written, and the environment that hosts Cron Control's runner. The plugin makes no special accommodations to handle files required by or produced by commands.
+
 = Why is PHP 7 required? =
 
 To support arrays in constants set using `define()`, PHP 7 is required. These are used to set whitelists and blacklists, though filters are also provided; see below.
