@@ -128,6 +128,8 @@ function get_command_blacklist() {
 /**
  * Splits positional args from associative args.
  *
+ * Adapted from `WP_CLI\Configurator\extract_assoc()`.
+ *
  * @param array|string $command String or array of command to parse.
  * @return array|WP_Error
  */
