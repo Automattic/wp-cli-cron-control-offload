@@ -213,14 +213,14 @@ function implode_parsed_command( $command ) {
 	$to_implode = array();
 
 	if ( ! empty( $command['global_assoc'] ) ) {
-		$global = array_map( __NAMESPACE__ . '\_assoc_arg_array_to_string', $command['global_assoc'] );
+		$global     = array_map( __NAMESPACE__ . '\_assoc_arg_array_to_string', $command['global_assoc'] );
 		$to_implode = array_merge( $to_implode, $global );
 	}
 
 	$to_implode = array_merge( $to_implode, $command['positional_args'] );
 
 	if ( ! empty( $command['local_assoc'] ) ) {
-		$local = array_map( __NAMESPACE__ . '\_assoc_arg_array_to_string', $command['local_assoc'] );
+		$local      = array_map( __NAMESPACE__ . '\_assoc_arg_array_to_string', $command['local_assoc'] );
 		$to_implode = array_merge( $to_implode, $local );
 	}
 
