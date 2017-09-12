@@ -51,31 +51,19 @@ function schedule_cli_command( $command, $timestamp = null ) {
  */
 function validate_command( $command ) {
 	$command = trim( $command );
+	$command = parse_command( $command );
 
-	// Strip `wp` if included.
-	if ( 0 === stripos( $command, 'wp' ) ) {
-		$command = trim( substr( $command, 2 ) );
+	// Failed to parse command.
+	if ( is_wp_error( $command ) ) {
+		return $command;
 	}
 
-	// Block disallowed commands.
-	$first_command = explode( ' ', $command );
-	$first_command = array_shift( $first_command );
-	if ( ! is_command_allowed( $first_command ) ) {
+	if ( ! is_command_allowed( $command['positional_args'][0] ) ) {
 		/* translators: 1: Disallowed command */
-		return new WP_Error( 'blocked-command', sprintf( __( '`%1$s` not allowed', 'wp-cli-cron-control-offload' ), $first_command ) );
+		return new WP_Error( 'blocked-command', sprintf( __( '`%1$s` not allowed', 'wp-cli-cron-control-offload' ), $command['positional_args'][0] ) );
 	}
 
-	// Don't worry about the user WP-CLI runs as.
-	if ( false === stripos( $command, '--allow-root' ) ) {
-		$command .= ' --allow-root';
-	}
-
-	// TODO: validate further // @codingStandardsIgnoreLine
-
-	// Nothing to run.
-	if ( empty( $command ) ) {
-		return new WP_Error( 'invalid-command', 'Invalid command provided' );
-	}
+	$command = implode_parsed_command( $command );
 
 	return $command;
 }
@@ -135,4 +123,106 @@ function get_command_blacklist() {
 	}
 
 	return apply_filters( 'wp_cli_cron_control_offload_command_blacklist', array() );
+}
+
+/**
+ * Splits positional args from associative args.
+ *
+ * @param array|string $command String or array of command to parse.
+ * @return array|WP_Error
+ */
+function parse_command( $command ) {
+	// Borrowed code expects an array, but a string is easier for our needs.
+	if ( is_string( $command ) ) {
+		$command = explode( ' ', $command );
+	}
+
+	// Bad request.
+	if ( ! is_array( $command ) || empty( $command ) ) {
+		return new WP_Error( 'command-parse-failed', __( 'Failed to parse requested command', 'wp-cli-cron-control-offload' ) );
+	}
+
+	// WP_CLI::runcommand doesn't need the `wp`.
+	$wp = array_search( 'wp', $command );
+	if ( false !== $wp ) {
+		unset( $command[ $wp ] );
+	}
+
+	// Match naming in what's borrowed from WP-CLI.
+	$arguments = $command;
+
+	// Start what's borrowed from WP-CLI. @codingStandardsIgnoreStart
+	$positional_args = $assoc_args = $global_assoc = $local_assoc = array();
+
+	foreach ( $arguments as $arg ) {
+		$positional_arg = $assoc_arg = null;
+
+		if ( preg_match( '|^--no-([^=]+)$|', $arg, $matches ) ) {
+			$assoc_arg = array( $matches[1], false );
+		} elseif ( preg_match( '|^--([^=]+)$|', $arg, $matches ) ) {
+			$assoc_arg = array( $matches[1], true );
+		} elseif ( preg_match( '|^--([^=]+)=(.*)|s', $arg, $matches ) ) {
+			$assoc_arg = array( $matches[1], $matches[2] );
+		} else {
+			$positional = $arg;
+		}
+
+		if ( ! is_null( $assoc_arg ) ) {
+			// Start addition.
+			// Skip, allowing WP-CLI to inherit
+			if ( 'allow-root' === $assoc_arg[0] ) {
+				continue;
+			}
+			// End addition.
+			$assoc_args[] = $assoc_arg;
+			if ( count( $positional_args ) ) {
+				$local_assoc[] = $assoc_arg;
+			} else {
+				$global_assoc[] = $assoc_arg;
+			}
+		} else if ( ! is_null( $positional ) ) {
+			$positional_args[] = $positional;
+		}
+
+	}
+	// End what's borrowed from WP-CLI. @codingStandardsIgnoreEnd
+
+	// Nothing to do.
+	if ( ! isset( $positional_args[0] ) || empty( $positional_args[0] ) ) {
+		return new WP_Error( 'no-command-specified', __( 'No command was provided.', 'wp-cli-cron-control-offload' ) );
+	}
+
+	return compact( 'positional_args', 'assoc_args', 'global_assoc', 'local_assoc' );
+}
+
+/**
+ * Restores a parsed command to a string WP-CLI can run
+ *
+ * @param array $command Parsed command to convert to string.
+ * @return string|WP_Error
+ */
+function implode_parsed_command( $command ) {
+	if ( ! is_array( $command ) || empty( $command['positional_args'] ) ) {
+		return new WP_Error( 'no-command-specified', __( 'No command was provided.', 'wp-cli-cron-control-offload' ) );
+	}
+
+	$to_implode = $command['positional_args'];
+
+	if ( ! empty( $command['assoc_args'] ) ) {
+		foreach ( $command['assoc_args'] as $assoc_arg ) {
+			if ( true === $assoc_arg[1] ) {
+				$to_implode[] = '--' . $assoc_arg[0];
+			} else {
+				$to_implode[] = sprintf( '--%1$s=%2$s', $assoc_arg[0], $assoc_arg[1] );
+			}
+		}
+	}
+
+	$imploded = trim( implode( ' ', $to_implode ) );
+
+	if ( empty( $imploded ) ) {
+		return new WP_Error( 'command-implode-failed', __( 'Failed to convert command array to string.', 'wp-cli-cron-control-offload' ) );
+	}
+
+	return $imploded;
 }
