@@ -144,10 +144,12 @@ function parse_command( $command ) {
 		return new WP_Error( 'command-parse-failed', __( 'Failed to parse requested command', 'wp-cli-cron-control-offload' ) );
 	}
 
-	// WP_CLI::runcommand doesn't need the `wp`.
-	$wp = array_search( 'wp', $command );
-	if ( false !== $wp ) {
-		unset( $command[ $wp ] );
+	// Don't care about existing keys, so reset to zero-indexed array.
+	$command = array_values( $command );
+
+	// `wp` is not part of the parsed command when WP-CLI is invoked.
+	if ( 'wp' === $command[0] ) {
+		unset( $command[0] );
 	}
 
 	// Match naming in what's borrowed from WP-CLI.
@@ -208,16 +210,18 @@ function implode_parsed_command( $command ) {
 		return new WP_Error( 'no-command-specified', __( 'No command was provided.', 'wp-cli-cron-control-offload' ) );
 	}
 
-	$to_implode = $command['positional_args'];
+	$to_implode = array();
 
-	if ( ! empty( $command['assoc_args'] ) ) {
-		foreach ( $command['assoc_args'] as $assoc_arg ) {
-			if ( true === $assoc_arg[1] ) {
-				$to_implode[] = '--' . $assoc_arg[0];
-			} else {
-				$to_implode[] = sprintf( '--%1$s=%2$s', $assoc_arg[0], $assoc_arg[1] );
-			}
-		}
+	if ( ! empty( $command['global_assoc'] ) ) {
+		$global = array_map( __NAMESPACE__ . '\_assoc_arg_array_to_string', $command['global_assoc'] );
+		$to_implode = array_merge( $to_implode, $global );
+	}
+
+	$to_implode = array_merge( $to_implode, $command['positional_args'] );
+
+	if ( ! empty( $command['local_assoc'] ) ) {
+		$local = array_map( __NAMESPACE__ . '\_assoc_arg_array_to_string', $command['local_assoc'] );
+		$to_implode = array_merge( $to_implode, $local );
 	}
 
 	$imploded = trim( implode( ' ', $to_implode ) );
@@ -227,4 +231,18 @@ function implode_parsed_command( $command ) {
 	}
 
 	return $imploded;
+}
+
+/**
+ * Convert an associative arg's array representation to a string for WP-CLI
+ *
+ * @param array $assoc_arg Associative arg to convert.
+ * @return string
+ */
+function _assoc_arg_array_to_string( $assoc_arg ) {
+	if ( true === $assoc_arg[1] ) {
+		return '--' . $assoc_arg[0];
+	} else {
+		return sprintf( '--%1$s=%2$s', $assoc_arg[0], $assoc_arg[1] );
+	}
 }
