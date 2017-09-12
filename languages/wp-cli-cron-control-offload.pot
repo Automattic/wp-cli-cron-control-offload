@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP-CLI Cron Control Offload 0.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-cli-cron-control-offload\n"
-"POT-Creation-Date: 2017-09-11 23:55:59+00:00\n"
+"POT-Creation-Date: 2017-09-12 22:53:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,9 +40,21 @@ msgid ""
 "`schedule_event` filter."
 msgstr ""
 
-#: includes/functions.php:65
+#: includes/functions.php:63
 #. translators: 1: Disallowed command
 msgid "`%1$s` not allowed"
+msgstr ""
+
+#: includes/functions.php:144
+msgid "Failed to parse requested command"
+msgstr ""
+
+#: includes/functions.php:196 includes/functions.php:210
+msgid "No command was provided."
+msgstr ""
+
+#: includes/functions.php:230
+msgid "Failed to convert command array to string."
 msgstr ""
 
 #: includes/run.php:20
