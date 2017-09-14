@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP-CLI Cron Control Offload 0.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-cli-cron-control-offload\n"
-"POT-Creation-Date: 2017-09-12 22:53:17+00:00\n"
+"POT-Creation-Date: 2017-09-14 02:19:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,21 +58,11 @@ msgid "Failed to convert command array to string."
 msgstr ""
 
 #: includes/run.php:20
-#. translators: 1: Plugin's prefix for log messages, 2. WP-CLI command that
-#. would have run
-msgid "%1$s: Attempted to run event without WP-CLI loaded. (%2$s)"
+msgid "Attempted to run event without WP-CLI loaded."
 msgstr ""
 
-#: includes/run.php:26
-#. translators: 1: Plugin's prefix for log messages, 2. WP-CLI command that
-#. would have run
-msgid "%1$s: Attempted to run blocked command. (%2$s)"
-msgstr ""
-
-#: includes/run.php:43
-#. translators: 1: Plugin's prefix for log messages, 2. Command error that
-#. caused failure
-msgid "%1$s: Command failed. (%2$s)"
+#: includes/run.php:46
+msgid "Command execution failed with an unexpected error."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
