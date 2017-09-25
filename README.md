@@ -25,7 +25,7 @@ Provides a WP-CLI command to schedule these events. A UI is under consideration.
 
 ### Where is command output captured? ###
 
-`error_log()` is used to store WP-CLI's output (`STDOUT`, `STDERR`, and the exit code), along with basic timing information and the command that was executed.
+The actions `wp_cli_cron_control_offload_run_success` and `wp_cli_cron_control_offload_run_error` are fired, allowing you to capture command output as your environment allows.
 
 ### Can this be used with commands that manipulate files? ###
 
@@ -51,8 +51,10 @@ Regardless of whether the constant or filter is used, either should provide an a
 
 ```
 array(
-	'post',
-	'site',
+	'cli',
+	'core',
+	'eval',
+	'eval-file',
 )
 ```
 
@@ -64,10 +66,8 @@ Regardless of whether the constant or filter is used, either should provide an a
 
 ```
 array(
-	'cli',
-	'core',
-	'eval',
-	'eval-file',
+	'post',
+	'site',
 )
 ```
 

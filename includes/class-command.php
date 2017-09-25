@@ -1,6 +1,6 @@
 <?php
 /**
- * Class CLI
+ * Class Command
  *
  * @package WP_CLI_Cron_Control_Offload
  */
@@ -8,7 +8,7 @@
 namespace Automattic\WP\WP_CLI_Cron_Control_Offload;
 
 if ( ! defined( 'WP_CLI' ) || ! \WP_CLI ) {
-	return false;
+	return;
 }
 
 use WP_CLI;
@@ -17,7 +17,7 @@ use WP_CLI_Command;
 /**
  * Offload WP-CLI commands to cron
  */
-class CLI extends WP_CLI_Command {
+class Command extends WP_CLI_Command {
 	/**
 	 * Create an event to run a given WP-CLI command
 	 *
@@ -50,4 +50,4 @@ class CLI extends WP_CLI_Command {
 	}
 }
 
-WP_CLI::add_command( CLI_NAMESPACE, __NAMESPACE__ . '\CLI' );
+WP_CLI::add_command( CLI_NAMESPACE, __NAMESPACE__ . '\Command' );
