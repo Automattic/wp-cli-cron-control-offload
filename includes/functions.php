@@ -250,7 +250,7 @@ function _assoc_arg_array_to_string( $assoc_arg ) {
 /**
  * Allow whitelist or blacklist to be filtered, permitting ONLY additions
  *
- * @param array $constant List value from constant, to be added to.
+ * @param array  $constant List value from constant, to be added to.
  * @param string $filter_tag String for list filter.
  * @return array
  */
