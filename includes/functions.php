@@ -106,7 +106,7 @@ function command_is_whitelisted( $whitelisted, $command ) {
  */
 function get_command_whitelist() {
 	if ( defined( 'WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST' ) && is_array( \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST ) ) {
-		return \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST;
+		return _filter_list_allow_only_additions( \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST, 'wp_cli_cron_control_offload_command_whitelist' );
 	}
 
 	return apply_filters( 'wp_cli_cron_control_offload_command_whitelist', array() );
@@ -119,7 +119,7 @@ function get_command_whitelist() {
  */
 function get_command_blacklist() {
 	if ( defined( 'WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST' ) && is_array( \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST ) ) {
-		return \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST;
+		return _filter_list_allow_only_additions( \WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST, 'wp_cli_cron_control_offload_command_blacklist' );
 	}
 
 	return apply_filters( 'wp_cli_cron_control_offload_command_blacklist', array() );
@@ -245,4 +245,29 @@ function _assoc_arg_array_to_string( $assoc_arg ) {
 	} else {
 		return sprintf( '--%1$s=%2$s', $assoc_arg[0], $assoc_arg[1] );
 	}
+}
+
+/**
+ * Allow whitelist or blacklist to be filtered, permitting ONLY additions
+ *
+ * @param array $constant List value from constant, to be added to.
+ * @param string $filter_tag String for list filter.
+ * @return array
+ */
+function _filter_list_allow_only_additions( $constant, $filter_tag ) {
+	$list = $constant;
+	$list = array_values( $list ); // Keys are irrelevant, and dropping them reinforces the additive nature of the following filter.
+
+	$additional = apply_filters( $filter_tag, array(), $list );
+
+	if ( ! is_array( $additional ) || empty( $additional ) ) {
+		return $constant;
+	}
+
+	$additional = array_values( $additional ); // Stop any funny business with string keys.
+
+	$list = array_merge( $list, $additional );
+	$list = array_unique( $list, SORT_STRING ); // Force type conversion to retain value from constant if filter tries funny business.
+
+	return empty( $list ) ? $constant : $list;
 }

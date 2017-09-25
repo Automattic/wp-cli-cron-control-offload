@@ -45,7 +45,7 @@ Yes, using the `wp_cli_cron_control_offload_is_command_allowed` filter. Note tha
 
 = Can commands be blocked or blacklisted? =
 
-Yes, using either the `WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST` constant or the `wp_cli_cron_control_offload_command_blacklist` filter. If defined, the constant takes precedence and the filter is ignored.
+Yes, using either the `WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_BLACKLIST` constant or the `wp_cli_cron_control_offload_command_blacklist` filter. If defined, the constant takes precedence and the filter is only able to supplement the constant's blacklist.
 
 Regardless of whether the constant or filter is used, either should provide an array of top-level commands to permit:
 
@@ -60,7 +60,7 @@ array(
 
 = Can commands be restricted or whitelisted? =
 
-Yes, using either the `WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST` constant or the `wp_cli_cron_control_offload_command_whitelist` filter. If defined, the constant takes precedence and the filter is ignored.
+Yes, using either the `WP_CLI_CRON_CONTROL_OFFLOAD_COMMAND_WHITELIST` constant or the `wp_cli_cron_control_offload_command_whitelist` filter. If defined, the constant takes precedence and the filter is only able to supplement the constant's whitelist.
 
 Regardless of whether the constant or filter is used, either should provide an array of top-level commands to block:
 
