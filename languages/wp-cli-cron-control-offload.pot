@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP-CLI Cron Control Offload 0.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-cli-cron-control-offload\n"
-"POT-Creation-Date: 2017-09-25 20:41:05+00:00\n"
+"POT-Creation-Date: 2017-09-26 22:26:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49,11 +49,19 @@ msgstr ""
 msgid "Failed to parse requested command"
 msgstr ""
 
-#: includes/functions.php:196 includes/functions.php:210
+#: includes/functions.php:196 includes/functions.php:230
 msgid "No command was provided."
 msgstr ""
 
-#: includes/functions.php:230
+#: includes/functions.php:215
+#. translators: 1: Disallowed character ampersand, 2: Disallowed character
+#. pipe, 3: Disallowed character redirect
+msgid ""
+"Invalid positional arguments, such as \"%1$s\", \"%2$s\", or \"%3$s\", "
+"found."
+msgstr ""
+
+#: includes/functions.php:250
 msgid "Failed to convert command array to string."
 msgstr ""
 
