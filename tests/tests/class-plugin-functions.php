@@ -90,4 +90,17 @@ class Plugin_Functions extends WP_UnitTestCase {
 		// Should also fail as a blocked event, though normalization would also block it as a duplicate.
 		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\schedule_cli_command( 'cli info' ) ) );
 	}
+
+	/**
+	 * Test each blocked bash operator
+	 */
+	function test_for_invalid_bash_operators() {
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list & date' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list | date' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list > /tmp/nope' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list 2> /tmp/nope' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list 1>&2 /tmp/nope' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list 2>&1 /tmp/nope' ) ) );
+		$this->assertTrue( is_wp_error( WP_CLI_Cron_Control_Offload\validate_command( 'post list &> /tmp/nope' ) ) );
+	}
 }
