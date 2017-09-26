@@ -196,6 +196,26 @@ function parse_command( $command ) {
 		return new WP_Error( 'no-command-specified', __( 'No command was provided.', 'wp-cli-cron-control-offload' ) );
 	}
 
+	// Block unsupported wanderings beyond WP-CLI.
+	// See http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-3.html, http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-4.html.
+	// TODO: provide additive filter?
+	$disallowed_positionals = array(
+		'&',
+		'|',
+		'>',
+		'2>',
+		'1>&2',
+		'2>&1',
+		'&>',
+	);
+
+	$found_disallowed = array_intersect( $positional_args, $disallowed_positionals );
+	if ( ! empty( $found_disallowed ) ) {
+		/* translators: 1: Disallowed character ampersand, 2: Disallowed character pipe, 3: Disallowed character redirect */
+		return new WP_Error( 'invalid-positional-args', sprintf( __( 'Invalid positional arguments, such as "%1$s", "%2$s", or "%3$s", found.', 'wp-cli-cron-control-offload' ), $disallowed_positionals[0], $disallowed_positionals[1], $disallowed_positionals[2] ) );
+	}
+
+	// Success!
 	return compact( 'positional_args', 'assoc_args', 'global_assoc', 'local_assoc' );
 }
 
