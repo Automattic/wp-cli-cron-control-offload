@@ -85,23 +85,10 @@ function is_command_allowed( $command ) {
 		return false;
 	}
 
-	// If there's a whitelist, default to it.
-	if ( ! empty( get_command_whitelist() ) ) {
-		add_filter( 'wp_cli_cron_control_offload_is_command_allowed', __NAMESPACE__ . '\command_is_whitelisted', 9, 2 );
-	}
+	// Default to command whitelist.
+	$whitelisted = in_array( $command, get_command_whitelist(), true );
 
-	return apply_filters( 'wp_cli_cron_control_offload_is_command_allowed', true, $command );
-}
-
-/**
- * Filter callback to check a command against a whitelist
- *
- * @param bool   $whitelisted Command is allowed.
- * @param string $command Command to check.
- * @return bool
- */
-function command_is_whitelisted( $whitelisted, $command ) {
-	return in_array( $command, get_command_whitelist(), true );
+	return apply_filters( 'wp_cli_cron_control_offload_is_command_allowed', $whitelisted, $command );
 }
 
 /**
