@@ -128,6 +128,7 @@ class Plugin_Functions extends WP_UnitTestCase {
 			array( 'wp cli info' ), // Should fail, is a blocked event.
 			array( 'wp cli info' ), // Should fail as a blocked event, would otherwise fail as a duplicate.
 			array( 'cli info' ), // Should also fail as a blocked event, though normalization would also block it as a duplicate.
+			array( sprintf( '%s create', WP_CLI_Cron_Control_Offload\CLI_NAMESPACE ) ), // Don't permit recursive scheduling.
 		);
 	}
 

@@ -75,6 +75,11 @@ function validate_command( $command ) {
  * @return bool
  */
 function is_command_allowed( $command ) {
+	// No recursion allowed.
+	if ( CLI_NAMESPACE === $command ) {
+		return false;
+	}
+
 	// Command explicitly disallowed.
 	if ( in_array( $command, get_command_blacklist(), true ) ) {
 		return false;
