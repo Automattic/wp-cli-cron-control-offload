@@ -51,11 +51,18 @@ class Plugin_Functions extends WP_UnitTestCase {
 	 * Test whitelisted command validation
 	 *
 	 * @dataProvider whitelisted_command_provider
+	 *
+	 * @param string $command Command to test.
 	 */
 	function test_whitelist_using_validate_command( $command ) {
 		$this->assertTrue( is_string( WP_CLI_Cron_Control_Offload\validate_command( $command ) ) );
 	}
 
+	/**
+	 * Data provider for command whitelisting
+	 *
+	 * @return array
+	 */
 	function whitelisted_command_provider() {
 		return array(
 			array( 'wp post list' ),
@@ -67,11 +74,18 @@ class Plugin_Functions extends WP_UnitTestCase {
 	 * Test blacklisted command validation
 	 *
 	 * @dataProvider blacklisted_command_provider
+	 *
+	 * @param string $command Command to test.
 	 */
 	function test_blacklist_using_validate_command( $command ) {
 		$this->assertWPError( WP_CLI_Cron_Control_Offload\validate_command( $command ) );
 	}
 
+	/**
+	 * Data provider for command blacklisting
+	 *
+	 * @return array
+	 */
 	function blacklisted_command_provider() {
 		return array(
 			array( 'wp cli info' ),
@@ -97,16 +111,23 @@ class Plugin_Functions extends WP_UnitTestCase {
 	 * Test scheduling several of the same blocked event
 	 *
 	 * @dataProvider blocked_events_provider
+	 *
+	 * @param string $command Command to test.
 	 */
 	function test_blocked_event_scheduling( $command ) {
 		$this->assertWPError( WP_CLI_Cron_Control_Offload\schedule_cli_command( $command ) );
 	}
 
+	/**
+	 * Data provider for blocked-event scheduling
+	 *
+	 * @return array
+	 */
 	function blocked_events_provider() {
 		return array(
 			array( 'wp cli info' ), // Should fail, is a blocked event.
 			array( 'wp cli info' ), // Should fail as a blocked event, would otherwise fail as a duplicate.
-			array( 'cli info'), // Should also fail as a blocked event, though normalization would also block it as a duplicate.
+			array( 'cli info' ), // Should also fail as a blocked event, though normalization would also block it as a duplicate.
 		);
 	}
 
@@ -114,11 +135,18 @@ class Plugin_Functions extends WP_UnitTestCase {
 	 * Test each blocked bash operator
 	 *
 	 * @dataProvider invalid_bash_operators_provider
+	 *
+	 * @param string $command Command to test.
 	 */
 	function test_for_invalid_bash_operators( $command ) {
 		$this->assertWPError( WP_CLI_Cron_Control_Offload\validate_command( $command ) );
 	}
 
+	/**
+	 * Data provider for unsupported bash operators
+	 *
+	 * @return array
+	 */
 	function invalid_bash_operators_provider() {
 		return array(
 			array( 'post list & date' ),

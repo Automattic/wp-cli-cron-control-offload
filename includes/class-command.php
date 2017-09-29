@@ -28,11 +28,6 @@ class Command extends WP_CLI_Command {
 	 */
 	public function create( $args, $assoc_args ) {
 		$command = WP_CLI\Utils\get_flag_value( $assoc_args, 'command', '' );
-		$command = validate_command( $command );
-
-		if ( is_wp_error( $command ) ) {
-			WP_CLI::error( $command->get_error_message() );
-		}
 
 		$timestamp = WP_CLI\Utils\get_flag_value( $assoc_args, 'timestamp', null );
 		if ( is_numeric( $timestamp ) ) {
