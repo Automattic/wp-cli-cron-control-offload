@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 
 		addtextdomain: {
 			options: {
-				textdomain: 'wp-cli-via-cron-control',
+				textdomain: 'wp-cli-cron-control-offload',
 			},
 			update_all_domains: {
 				options: {
@@ -31,8 +31,8 @@ module.exports = function( grunt ) {
 			target: {
 				options: {
 					domainPath: '/languages',
-					mainFile: 'wp-cli-via-cron-control.php',
-					potFilename: 'wp-cli-via-cron-control.pot',
+					mainFile: 'wp-cli-cron-control-offload.php',
+					potFilename: 'wp-cli-cron-control-offload.pot',
 					potHeaders: {
 						poedit: true,
 						'x-poedit-keywordslist': true
